@@ -280,7 +280,6 @@ class ChooseDialog(QDialog):
 
 
 
-
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -322,6 +321,11 @@ class MainWindow(QMainWindow):
         btn_ac_adduser.triggered.connect(self.insert)
         btn_ac_adduser.setStatusTip("Додати курсанта")
         toolbar.addAction(btn_ac_adduser)
+
+        btn_ac_red = QAction(QIcon("icon/paper.png"), "Редагувати відомості", self)
+        btn_ac_red.triggered.connect(self.red)
+        btn_ac_red.setStatusTip("Редагувати")
+        toolbar.addAction(btn_ac_red)
 
         btn_ac_refresh = QAction(QIcon("icon/refresh.png"),"Оновити",self)
         btn_ac_refresh.triggered.connect(self.loaddata)
@@ -374,6 +378,9 @@ class MainWindow(QMainWindow):
                 cursor.movePosition(QTextCursor.NextCell)
         document.print_(printer)
 
+    def red(self):
+        dlg = RedDialog()
+        dlg.exec_()
 
     def insert(self):
         dlg = InsertDialog()
@@ -387,6 +394,38 @@ class MainWindow(QMainWindow):
         dlg = SearchDialog()
         dlg.exec_()
 
+class RedDialog(QDialog):
+    def __init__(self):
+        super(RedDialog, self).__init__()
+
+        self.setWindowTitle("Редагування курсантів")
+
+        self.setMinimumSize(900, 600)
+
+class MainWindow2(QMainWindow):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow2, self).__init__(*args, **kwargs)
+
+        self.setWindowIcon(QIcon('logo.png'))
+
+
+        self.setWindowTitle("Оцінки курсантів")
+
+        self.setMinimumSize(1000, 600)
+
+        self.marksWidget = QTableWidget()
+        self.setCentralWidget(self.marksWidget)
+        self.marksWidget.setAlternatingRowColors(True)
+        self.marksWidget.setColumnCount(6)
+        self.marksWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.marksWidget.setSortingEnabled(True)
+        self.marksWidget.horizontalHeader().setSortIndicatorShown(True)
+        self.marksWidget.horizontalHeader().setStretchLastSection(True)
+        self.marksWidget.verticalHeader().setVisible(False)
+        self.marksWidget.verticalHeader().setCascadingSectionResizes(False)
+        self.marksWidget.verticalHeader().setStretchLastSection(False)
+        self.marksWidget.setHorizontalHeaderLabels(
+            ("ПІБ", "ЗСП", "СА", "ТРПЗ", "ТПР", "ФВ"))
 
 
 
