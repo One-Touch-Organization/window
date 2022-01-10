@@ -14,6 +14,7 @@ class Login(QDialog): #вікно входу
         super(Login,self).__init__()
         loadUi("login.ui",self)
         self.loginbutton.clicked.connect(self.loginfunction) #Подключаю кнопку к функции логин
+        self.label_5.setPixmap(QPixmap("icon/person.png"))  #Ставим фотографию на лейбл
         self.registerbutton.clicked.connect(self.gotocreate) #Подключаю кнопку к функции гоутукриейт
         self.hidebutton.clicked.connect(self.hidepassword)
 
@@ -57,6 +58,8 @@ class CreateAcc(QDialog): #вікно реєстрації
         loadUi("createaccount.ui",self)
         self.signupbutton.clicked.connect(self.createaccfunction)#підключає до кнопки функцію createaccfun..
         self.goinbutton.clicked.connect(self.goinfunction)
+        self.label_5.setPixmap(QPixmap("icon/pencil.png"))  #ставим фотографию на лейбл
+
 
     def createaccfunction(self):
         user = self.emailfield.text()
@@ -83,7 +86,7 @@ class CreateAcc(QDialog): #вікно реєстрації
                 widget.addWidget(goin)
                 widget.setCurrentIndex(widget.currentIndex() + 1)
             else:
-                self.errorla.setText('Такий юзер уже існуе')
+                self.errorla.setText('Такий користувач уже існуе')
 
 
 
@@ -130,21 +133,24 @@ class InsertDialog(QDialog):
         self.seminput.addItem("3 Група")
         self.seminput.addItem("4 Група")
         self.seminput.addItem("5 Група")
-
         layout.addWidget(self.seminput)
 
-        self.zvaninput = QLineEdit()
-        self.zvaninput.setPlaceholderText("Звання")
+        self.zvaninput = QComboBox()
+        self.zvaninput.addItem("Солдат")
+        self.zvaninput.addItem("Молодший сержант")
+        self.zvaninput.addItem("Сержант")
         layout.addWidget(self.zvaninput)
 
-        self.posadainput = QLineEdit()
-        self.posadainput.setPlaceholderText("Посада")
+        self.posadainput = QComboBox()
+        self.posadainput.addItem("Курсант")
+        self.posadainput.addItem("Командир 1 відділення")
+        self.posadainput.addItem("Командир 2 відділення")
+        self.posadainput.addItem("Командир групи")
         layout.addWidget(self.posadainput)
 
         self.balinput = QLineEdit()
         self.balinput.setPlaceholderText("Середній бал")
         layout.addWidget(self.balinput)
-
 
 
         self.mobileinput = QLineEdit()
@@ -164,8 +170,8 @@ class InsertDialog(QDialog):
         name = ""
         branch = ""
         sem = -1
-        zvan = ""
-        posada = ""
+        zvan = -1
+        posada = -1
         bal = -1
         mobile = -1
         address = ""
@@ -173,8 +179,8 @@ class InsertDialog(QDialog):
         name = self.nameinput.text()
         branch = self.branchinput.itemText(self.branchinput.currentIndex())
         sem = self.seminput.itemText(self.seminput.currentIndex())
-        zvan = self.zvaninput.text()
-        posada = self.posadainput.text()
+        zvan = self.zvaninput.itemText(self.zvaninput.currentIndex())
+        posada = self.posadainput.itemText(self.posadainput.currentIndex())
         bal = self.balinput.text()
         mobile = self.mobileinput.text()
         address = self.addressinput.text()
@@ -280,7 +286,6 @@ class ChooseDialog(QDialog):
 
 
 
-
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -291,7 +296,8 @@ class MainWindow(QMainWindow):
         self.c.execute("CREATE TABLE IF NOT EXISTS cadet(roll INTEGER PRIMARY KEY AUTOINCREMENT ,name TEXT,branch TEXT,sem INTEGER,zvan TEXT,posada TEXT,bal REAL,mobile INTEGER,address TEXT)")
         self.c.close()
 
-        file_menu = self.menuBar().addMenu("&File")
+        file_menu = self.menuBar().addMenu("&Файл")
+        help_menu = self.menuBar().addMenu("&Помощь")
 
         self.setWindowTitle("АСУКурсант")
 
@@ -303,6 +309,7 @@ class MainWindow(QMainWindow):
         self.tableWidget.setColumnCount(9)
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.tableWidget.setStyleSheet("background-color: #50a664; selection-background-color: #353535;")
         self.tableWidget.setSortingEnabled(True)
         self.tableWidget.horizontalHeader().setSortIndicatorShown(True)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
@@ -322,6 +329,11 @@ class MainWindow(QMainWindow):
         btn_ac_adduser.triggered.connect(self.insert)
         btn_ac_adduser.setStatusTip("Додати курсанта")
         toolbar.addAction(btn_ac_adduser)
+
+        btn_ac_red = QAction(QIcon("icon/paper.png"), "Редагувати відомості", self)
+        btn_ac_red.triggered.connect(self.red)
+        btn_ac_red.setStatusTip("Редагувати")
+        toolbar.addAction(btn_ac_red)
 
         btn_ac_refresh = QAction(QIcon("icon/refresh.png"),"Оновити",self)
         btn_ac_refresh.triggered.connect(self.loaddata)
@@ -374,6 +386,9 @@ class MainWindow(QMainWindow):
                 cursor.movePosition(QTextCursor.NextCell)
         document.print_(printer)
 
+    def red(self):
+        dlg = RedDialog()
+        dlg.exec_()
 
     def insert(self):
         dlg = InsertDialog()
@@ -386,6 +401,63 @@ class MainWindow(QMainWindow):
     def search(self):
         dlg = SearchDialog()
         dlg.exec_()
+
+class RedDialog(QDialog):
+    def __init__(self):
+        super(RedDialog, self).__init__()
+
+        self.setWindowTitle("Редагування курсантів")
+
+        self.setMinimumSize(900, 600)
+
+class MainWindow2(QMainWindow):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow2, self).__init__(*args, **kwargs)
+
+        self.setWindowIcon(QIcon('logo.png'))
+
+        self.setWindowIcon(QIcon('logo.png'))
+        self.conn = sql.connect("database.db")
+        self.c = self.conn.cursor()
+        self.c.execute(
+            "CREATE TABLE IF NOT EXISTS marks AS SELECT name FROM cadet")
+        self.c.close()
+        self.setMinimumSize(1000, 600)
+
+        self.marksWidget = QTableWidget()
+        self.setCentralWidget(self.marksWidget)
+        self.marksWidget.setAlternatingRowColors(True)
+        self.marksWidget.setColumnCount(2)
+        self.marksWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.marksWidget.setSortingEnabled(True)
+        self.marksWidget.horizontalHeader().setSortIndicatorShown(True)
+        self.marksWidget.horizontalHeader().setStretchLastSection(True)
+        self.marksWidget.verticalHeader().setVisible(False)
+        self.marksWidget.verticalHeader().setCascadingSectionResizes(False)
+        self.marksWidget.verticalHeader().setStretchLastSection(False)
+        self.marksWidget.setHorizontalHeaderLabels(
+            ("ПІБ", "ЗСП"))
+
+        toolbar = QToolBar()
+        toolbar.setMovable(False)
+        self.addToolBar(toolbar)
+
+
+        btn_ac_refresh = QAction(QIcon("icon/refresh.png"),"Оновити",self)
+        btn_ac_refresh.triggered.connect(self.loaddata)
+        btn_ac_refresh.setStatusTip("Оновити таблицю")
+        toolbar.addAction(btn_ac_refresh)
+
+    def loaddata(self):
+        self.connection = sql.connect("database.db")
+        query = "SELECT * FROM marks"
+        result = self.connection.execute(query)
+        self.tableWidget.setRowCount(0)
+        for row_number, row_data in enumerate(result):
+            self.tableWidget.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+        self.connection.close()
 
 
 

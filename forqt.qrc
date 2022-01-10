@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="pencil">
+    <file>icon/pencil.png</file>
+  </qresource>
+  <qresource prefix="person">
+    <file>icon/percon.png</file>
+  </qresource>
+</RCC>

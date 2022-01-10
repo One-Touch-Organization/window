@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(29, 29, 29);</string>
+   <string notr="true">background-color: rgb(15, 29, 29);</string>
   </property>
   <widget class="QLineEdit" name="email">
    <property name="geometry">
@@ -135,10 +135,10 @@ QPushButton:pressed{
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>10</y>
-     <width>121</width>
-     <height>151</height>
+     <x>170</x>
+     <y>40</y>
+     <width>141</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="font">
@@ -147,12 +147,21 @@ QPushButton:pressed{
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(0, 162, 93);
+    <string notr="true">background-color: rgb(119, 179, 212);
 border-radius: 20px;
 </string>
    </property>
    <property name="text">
-    <string>🔓︎</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="forqt.qrc">:/person/icon/percon.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="errorla">
@@ -203,6 +212,8 @@ font-size:16pt;
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="forqt.qrc"/>
+ </resources>
  <connections/>
 </ui>

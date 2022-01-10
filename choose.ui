@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
+    <width>524</width>
     <height>501</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(95, 95, 95);</string>
+   <string notr="true">background-color: rgb(15, 29, 29);</string>
   </property>
   <widget class="QPushButton" name="infobutton">
    <property name="geometry">
